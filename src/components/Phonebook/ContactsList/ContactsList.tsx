@@ -1,18 +1,18 @@
-import React, { ReactElement, useCallback, useContext, useEffect, useMemo, useState } from 'react';
+import React, { ReactElement, useCallback, useEffect, useMemo, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { TransitionGroup, CSSTransition, SwitchTransition } from 'react-transition-group';
 import { ContactsListItem } from './ContactsListItem';
 import { SContactsList, SListWrapper } from './ContactsList.sc';
 import { ContactsListPlaceholder } from './ContactsListPlaceholder';
-import { PhonebookContext } from '../store/PhonebookContext';
-import { PhonebookActions } from '../store/phonebookReducer';
+import { deleteContact } from '../store/actions';
+import { Contact } from '../_shared/Contact';
+import { PhonebookState } from '../store/state';
 
 export const ContactsList: React.FC = () => {
-    const { search, contacts, dispatch } = useContext(PhonebookContext);
-
-    const handleContactDelete = useCallback(
-        (id) => dispatch({ type: PhonebookActions.DELETE_CONTACT, payload: { id } }),
-        [dispatch],
-    );
+    const contacts = useSelector<PhonebookState, Contact[]>((state) => state.contacts);
+    const search = useSelector<PhonebookState, string>((state) => state.search);
+    const dispatch = useDispatch();
+    const handleContactDelete = useCallback((id) => dispatch(deleteContact(id)), [dispatch]);
 
     const filteredContacts = useMemo(
         () => contacts.filter(({ name }) => name.toLocaleLowerCase().includes(search.toLocaleLowerCase())),

@@ -1,19 +1,19 @@
-import React, { useCallback, useContext, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { debounce } from 'lodash';
 import { Box } from '../../_shared/Box';
 import { Input } from '../../_shared/Input';
-import { PhonebookContext } from '../store/PhonebookContext';
-import { PhonebookActions } from '../store/phonebookReducer';
+import { setSearch } from '../store/actions';
+import { Contact } from '../_shared/Contact';
+import { PhonebookState } from '../store/state';
 
 export const ContactsFilter: React.FC = () => {
-    const { contacts, dispatch } = useContext(PhonebookContext);
+    const contacts = useSelector<PhonebookState, Contact[]>((state) => state.contacts);
+    const dispatch = useDispatch();
     const [value, setValue] = useState('');
 
     const debouncedHandler = useCallback(
-        debounce(
-            (e) => dispatch({ type: PhonebookActions.SET_SEARCH, payload: { search: e.target.value.trim() } }),
-            200,
-        ),
+        debounce((e) => dispatch(setSearch(e.target.value.trim())), 200),
         [debounce],
     );
 

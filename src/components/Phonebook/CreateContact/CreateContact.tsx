@@ -1,13 +1,16 @@
-import React, { ChangeEvent, useCallback, useContext, useState } from 'react';
+import React, { ChangeEvent, useCallback, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { Box } from '../../_shared/Box';
 import { Input } from '../../_shared/Input';
 import { Button } from '../../_shared/Button';
-import { PhonebookContext } from '../store/PhonebookContext';
-import { PhonebookActions } from '../store/phonebookReducer';
 import { Notify, useNotify } from '../Notify';
+import { PhonebookState } from '../store/state';
+import { createContact } from '../store/actions';
+import { Contact } from '../_shared/Contact';
 
 export const CreateContact: React.FC = () => {
-    const { contacts, dispatch } = useContext(PhonebookContext);
+    const contacts = useSelector<PhonebookState, Contact[]>((state) => state.contacts);
+    const dispatch = useDispatch();
 
     const { isShowing, show } = useNotify();
 
@@ -43,10 +46,7 @@ export const CreateContact: React.FC = () => {
                 return;
             }
 
-            dispatch({
-                type: PhonebookActions.CREATE_CONTACT,
-                payload: { name: prettifiedName, number: trimmedNumber },
-            });
+            dispatch(createContact({ name: prettifiedName, number: trimmedNumber }));
 
             setName('');
             setNumber('');
