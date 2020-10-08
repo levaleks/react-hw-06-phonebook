@@ -1,4 +1,4 @@
-import { Contact } from '../_shared/Contact';
+import { Contact } from './Contact';
 
 export class PhonebookStorage {
     constructor(public key) {}
@@ -29,3 +29,5 @@ export class PhonebookStorage {
         }
     }
 }
+
+export const phonebookStorage = new PhonebookStorage('phonebook-v1');
